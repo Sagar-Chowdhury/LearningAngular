@@ -1,5 +1,7 @@
 <p>rooms works!</p>
 
+ <app-header></app-header>
+
 <div [hidden]="isVisible">
 
     <h1>Hotel is Open</h1>
@@ -9,30 +11,14 @@
 <button (click)="toggle()"> Hotel on/off </button>
 
 
-<table>
-    <thead>
-      <tr>
-        <th>Room Number</th>
-        <th>Room Type</th>
-        <th>Amenities</th>
-        <th>Price</th>
-        <th>Photos</th>
-        <th>Check-in Time</th>
-        <th>Check-out Time</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr [ngClass]="i%2==0?'even':'odd'" *ngFor="let room of roomList | slice:0:8 ;let i=index">
-        <td>{{ room.roomNumber }}</td>
-        <td>{{ room.roomType }}</td>
-        <td>{{ room.amenities|titlecase }}</td>
-        <td>{{ room.price |currency:'INR'}}</td>
-        <td>{{ room.photos }}</td>
-        <td>{{ room.checkInTime | date:'shortDate' }}</td>
-        <td>{{ room.checkoutTime | date:'mediumDate' }}</td>
-      </tr>
-    </tbody>
-  </table>
+ <div *ngIf="currentRoom" >
+     {{currentRoom|json}} 
+ </div>
+
+  
+ 
+
+ <app-rooms-list  [rooms]="roomList" (selectedRoom)="selectRoom($event)" ></app-rooms-list>
 
   <div [ngSwitch]="currentUser" >
        
@@ -40,5 +26,7 @@
     <p *ngSwitchCase="'User'">User Has logged in</p>
     <p *ngSwitchDefault="">Default case due to faulty output</p>
   </div>
+
+ 
 
  <div [ngStyle]="myStyles">Styled Content</div> 
