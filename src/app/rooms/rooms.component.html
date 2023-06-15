@@ -1,32 +1,36 @@
 <p>rooms works!</p>
 
- <app-header></app-header>
+<app-header></app-header>
 
 <div [hidden]="isVisible">
 
-    <h1>Hotel is Open</h1>
+  <h1>Hotel is Open</h1>
 
 </div>
 
 <button (click)="toggle()"> Hotel on/off </button>
 
 
- <div *ngIf="currentRoom" >
-     {{currentRoom|json}} 
- </div>
+<div *ngIf="currentRoom">
+  {{currentRoom|json}}
+</div>
+<div *ngIf="rooms$ | async as rooms">
+ <app-rooms-list [rooms]="rooms" (selectedRoom)="selectRoom($event)"></app-rooms-list>
+</div>
+<div [ngSwitch]="currentUser">
 
-  
- 
+  <p *ngSwitchCase="'Admin'">Admin Has logged in</p>
+  <p *ngSwitchCase="'User'">User Has logged in</p>
+  <p *ngSwitchDefault="">Default case due to faulty output</p>
+</div>
+<button (click)="addRoom()">Add Button</button>
+<button (click)="editRoom()">Edit Button</button>
+<button (click)="deleteRoom()">Delete Button</button>
 
- <app-rooms-list  [rooms]="roomList" (selectedRoom)="selectRoom($event)" ></app-rooms-list>
+<h1>{{totalBytesLoaded}} bytes loaded</h1>
 
-  <div [ngSwitch]="currentUser" >
-       
-    <p *ngSwitchCase="'Admin'">Admin Has logged in</p>
-    <p *ngSwitchCase="'User'">User Has logged in</p>
-    <p *ngSwitchDefault="">Default case due to faulty output</p>
-  </div>
+<button (click)="navigate()" > Navigate to Login </button>
 
- 
 
- <div [ngStyle]="myStyles">Styled Content</div> 
+<router-outlet></router-outlet>
+<!-- <div [ngStyle]="myStyles">Styled Content</div>  -->

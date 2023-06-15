@@ -1,0 +1,45 @@
+<form (ngSubmit)="submitForm()" #roomForm="ngForm">
+  <div>
+    <label for="roomNumber">Room Number:</label>
+    <input type="number" id="roomNumber" name="roomNumber" [(ngModel)]="room.roomNumber" required>
+  </div>
+
+  <div>
+    <label for="roomType">Room Type:</label>
+    <input type="text" id="roomType" name="roomType" [(ngModel)]="room.roomType" required>
+  </div>
+
+  <div>
+    <label for="amenities">Amenities:</label>
+    <input type="text" id="amenities" name="amenities" [(ngModel)]="room.amenities" required>
+  </div>
+
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" [(ngModel)]="room.price" required>
+  </div>
+
+  <div>
+    <label for="photos">Photos:</label>
+    <input type="text" id="photos" name="photos" [(ngModel)]="room.photos" required>
+  </div>
+
+  <div>
+    <label for="checkInTime">Check-in Time:</label>
+    <input type="datetime-local" id="checkInTime" name="checkInTime" [(ngModel)]="room.checkInTime" required>
+  </div>
+
+  <div>
+    <label for="checkoutTime">Checkout Time:</label>
+    <input type="datetime-local" id="checkoutTime" name="checkoutTime" [(ngModel)]="room.checkoutTime" required>
+  </div>
+
+  <div>
+    <label for="rating">Rating:</label>
+    <input type="number" id="rating" name="rating" [(ngModel)]="room.rating" required>
+  </div>
+
+  <button type="submit" [disabled]="!roomForm.valid">Submit</button>
+</form>
+
+<h1 *ngIf = "successMessage!" > {{successMessage}}  </h1>

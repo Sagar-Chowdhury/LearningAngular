@@ -25,8 +25,8 @@
         <td>{{ room.checkInTime | date:'shortDate' }}</td>
         <td>{{ room.checkoutTime | date:'mediumDate' }}</td>
         <td>
-          <button (click)="selectRoom(room)" >
-           Select
+          <button [routerLink]="['/rooms' , room.roomNumber]"  >
+          BookRoom
           </button>
         </td>
       </tr>

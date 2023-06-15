@@ -3,6 +3,8 @@ import { RoomList } from './room';
 import { HeaderComponent } from '../header/header.component';
 import { RoomsService } from './services/rooms.service';
 import { Observable } from 'rxjs';
+import { HttpEventType, HttpRequest } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rooms',
@@ -11,10 +13,14 @@ import { Observable } from 'rxjs';
 })
 export class RoomsComponent implements OnInit,AfterViewInit {
 
+   totalBytesLoaded =0
    isVisible :boolean =true;  
    currentUser:string = "Admin"
    roomList: RoomList[] =[];
    currentRoom!:RoomList
+
+   rooms$ = this.roomService.getRooms$
+
    @ViewChild(HeaderComponent) headerComponent!:HeaderComponent
   toggle(): void{
     this.isVisible =!this.isVisible
@@ -46,13 +52,17 @@ export class RoomsComponent implements OnInit,AfterViewInit {
 
 
 
-  constructor( private roomService:RoomsService ){}
+  constructor( private roomService:RoomsService , private router:Router){}
 
   ngOnInit(): void {
     console.log(this.headerComponent);
-     this.roomService.getRooms().subscribe(room =>{
-            this.roomList=room;
-     })
+
+
+    //  this.roomService.getRooms$.subscribe(room =>{
+    //         this.roomList=room;
+    //  })
+
+
      //subscribing to the stream observable
      this.stream.subscribe({
       next: (value)=>console.log(value),
@@ -60,7 +70,41 @@ export class RoomsComponent implements OnInit,AfterViewInit {
       error:(err)=>console.log(err)
       
       })
-    
+      
+      //subscribing to receive photos
+      this.roomService.getPhotos().subscribe((event) =>{
+            //console.log(photo); //problem with logging here is that it logs data at varoious levels of loading.
+            
+            switch(event.type)
+            {
+              case HttpEventType.Sent:{
+                 
+                console.log("Request Sent");
+                 
+                break;
+              }
+              case HttpEventType.ResponseHeader:{
+
+                console.log("Request Success");
+                
+                break;
+              }
+              case HttpEventType.DownloadProgress:{
+                this.totalBytesLoaded+=event.loaded
+                break
+              }
+              case HttpEventType.Response:{
+                     console.log(event.body);
+                     
+              }
+            }
+
+
+            
+     })
+
+
+
     
 
   }
@@ -70,7 +114,84 @@ export class RoomsComponent implements OnInit,AfterViewInit {
     
   }
 
+
+  //add method attached to button
+  addRoom(){
+        
+    const room : RoomList = {
+      roomNumber:'609',
+      roomType: 'Standard69',
+      amenities: 'Wi-Fi, TV, Air Conditioning',
+      price: 100,
+      photos: 'room101.jpg',
+      checkInTime: new Date('2023-06-05T14:00:00'),
+      checkoutTime: new Date('2023-06-06T12:00:00'),
+      rating: 4,
+    
+    };
+
+    this.roomService.addRoom(room).subscribe(data =>{
+          this.roomList = data;
+        })
   
 
 
+  }
+
+
+  //edit method attached to a button.
+  editRoom(){
+     
+    const room : RoomList = {
+      roomNumber:'3',
+      roomType: 'Standard108',
+      amenities: 'Wi-Fi, TV, Air Conditioning',
+      price: 100,
+      photos: 'room101.jpg',
+      checkInTime: new Date('2023-06-05T14:00:00'),
+      checkoutTime: new Date('2023-06-06T12:00:00'),
+      rating: 4,
+    
+    };
+
+    this.roomService.editRoom(room).subscribe(data =>{
+              this.roomList = data;
+            })
+
+
+
+  }
+
+
+  //delete method attached to a button.
+  deleteRoom(){
+     
+    const room : RoomList = {
+      roomNumber:'3',
+      roomType: 'Standard108',
+      amenities: 'Wi-Fi, TV, Air Conditioning',
+      price: 100,
+      photos: 'room101.jpg',
+      checkInTime: new Date('2023-06-05T14:00:00'),
+      checkoutTime: new Date('2023-06-06T12:00:00'),
+      rating: 4,
+    
+    };
+     
+    this.roomService.deleteRoom(room).subscribe(data =>{
+                  this.roomList = data;
+                })
+
+
+  }
+
+  navigate(){
+    this.router.navigate(['/rooms','login']);
+
+  }
+  
+
+
+
 }
+
